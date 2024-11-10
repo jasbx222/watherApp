@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wather app</title>
+</head>
+<link rel="stylesheet" href='style.css'>
+<body>
+    <div class="card">
+
+        <div class="search">
+            <input class="searchBox" type="text" placeholder="enter city name...">
+            <button class="button"><img src="images/search.png" alt=""></button>
+
+        </div>
+        <div class="weather">
+            <img src="/images/rain.png" class="weatherIcon">
+            <h1 class="temp">22c</h1>
+            <h2 class="city">London</h2>
+            <div class="detales">
+                <div class="col">
+                    <img src="images/humidity.png" alt="">
+                    <div>
+                        <p class="humidity">50%</p>
+                        <p>humidity</p>
+                    </div>
+                </div>
+                <div class="col">
+                    <img src="images/wind.png" alt="">
+                    <div>
+                        <p class="wind">15km</p>
+                        <p>wind spped</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+
+        const apikey = "ea22fe46c6d7187101bddb8219e91c54";
+        const apiUrl = "https://api.openweathermap.org/data/2.5/weather?units=metric&q=iraq"
+        async function checkWather() {
+            const response = await fetch(apiUrl + `&appid=${apikey}`);
+            const data = await response.json();
+
+            document.querySelector(".temp").textContent = data.main.temp;
+            document.querySelector(".city").textContent = data.name;
+            document.querySelector(".humidity").textContent = data.main.humidity;
+            document.querySelector(".wind").textContent = data.wind.speed + "km/h";
+
+            document.querySelector(".weatherIcon").setAttribute("src", "http://openweathermap.org/img/wn/" + data.weather[0].icon + "@2x.png");
+            if (data.weather[0].main == 'Clouds') {
+                document.querySelector(".weatherIcon").setAttribute("src", "images/cloud.png");
+            } else if (data.weather[0].main == 'Clear') {
+                document.querySelector(".weatherIcon").setAttribute("src", "images/clear.png");
+            }
+
+
+        }
+
+        checkWather();
+        const searchBox = document.querySelector('.searchBox')
+        const searchButton = document.querySelector('.button')
+        searchButton.addEventListener('click', () => {
+            const apiUrl = `https://api.openweathermap.org/data/2.5/weather?units=metric&q=${searchBox.value}`
+
+            fetch(apiUrl + `&appid=${apikey}`)
+                .then(response => response.json())
+                .then(data => {
+                    document.querySelector(".temp").textContent = data.main.temp;
+                    document.querySelector(".city").textContent = data.name;
+                    document.querySelector(".humidity").textContent = data.main.humidity;
+                    document.querySelector(".wind").textContent = data.wind.speed + "km/h";
+                    document.querySelector(".weatherIcon").setAttribute("src", "http://openweathermap.org/img/wn/" + data.weather[0].icon + "@2x.png");
+
+                    searchBox.value = "";
+                })
+        })
+
+
+
+
+
+    </script>
+</body>
+
+</html>
